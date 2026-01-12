@@ -39,7 +39,7 @@ export class QuizViewModel {
       { id: 7, question: 'What is the smallest unit of matter?', options: ['Molecule', 'Atom', 'Proton', 'Electron'], correctAnswer: 1, topic: 'Science' },
       { id: 8, question: 'How many chambers does a human heart have?', options: ['2', '3', '4', '5'], correctAnswer: 2, topic: 'Science' },
       { id: 9, question: 'What is the hardest natural substance?', options: ['Gold', 'Iron', 'Diamond', 'Platinum'], correctAnswer: 2, topic: 'Science' },
-      { id: 10, question: 'Which blood type is known as the universal donor?', options: ['A+', 'B+', 'AB+', 'O-'], correctAnswer: 3, topic: 'Science' }
+        { id: 10, question: 'Which blood type is known as the universal donor?', options: [`A+`, `B+`, `AB+`, `O-`], correctAnswer: 3, topic: 'Science' }
     ];
 
     const geographyQuestions: Question[] = [

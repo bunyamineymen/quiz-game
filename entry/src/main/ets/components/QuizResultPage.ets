@@ -14,11 +14,21 @@ export struct QuizResultPage {
 
   private getPerformanceMessage(): string {
     const percentage = this.quizResult*10;
-    if (percentage >= 90) return 'Excellent! 🏆';
-    if (percentage >= 80) return 'Very good! 🌟';
-    if (percentage >= 70) return 'Good! 👍';
-    if (percentage >= 60) return 'Not bad! 💪';
-    if (percentage >= 50) return 'You can do better! 📚';
+    if (percentage >= 90) {
+      return 'Excellent! 🏆'
+    };
+    if (percentage >= 80) {
+      return 'Very good! 🌟'
+    };
+    if (percentage >= 70) {
+      return 'Good! 👍'
+    };
+    if (percentage >= 60) {
+      return 'Not bad! 💪'
+    };
+    if (percentage >= 50) {
+      return 'You can do better! 📚'
+    };
     return "Don't give up! 🎯";
   }
 

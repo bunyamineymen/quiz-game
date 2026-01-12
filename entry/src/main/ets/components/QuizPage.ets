@@ -14,8 +14,8 @@ export struct QuizPage {
   @State questions: Question[] = [];
   @State userAnswers: number[] = [];
   @State currentQuestionIndex: number = 0;
-  @State isQuizCompleted: boolean = false;
-  @State quizResult: QuizResult | null = null;
+  private isQuizCompleted: boolean = false;
+  private quizResult: QuizResult | null = null;
   @State isDarkMode: boolean = false;
 
   aboutToAppear() {
@@ -80,7 +80,7 @@ export struct QuizPage {
               .padding({ left: 20, right: 20 })
 
             Column({ space: 8 }) {
-              ForEach(this.getCurrentQuestion()!.options, (option: string, index: number) => {
+              ForEach(this.getCurrentQuestion()!.options, (option: string) => {
                 Button(option)
                   .width('90%')
                   .height(30)
@@ -93,9 +93,10 @@ export struct QuizPage {
                     color: this.isDarkMode ? '#555555' : '#e9ecef'
                   })
                   .onClick(() => {
+                    const index = this.getCurrentQuestion()!.options.indexOf(option);
                     this.selectAnswer(index);
                   })
-              })
+              },(option: string) => option)
             }
             .width('100%')
             .alignItems(HorizontalAlign.Center)

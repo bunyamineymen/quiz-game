@@ -23,7 +23,8 @@ export struct SelectTopic {
   private async initComponent() {
     try {
       await this.preferencesUtil.initPreferences(this.getUIContext().getHostContext() as common.UIAbilityContext);
-      this.isDarkMode = this.preferencesUtil.getDarkModePreference(this.getUIContext().getHostContext() as common.UIAbilityContext);
+      this.isDarkMode = this.preferencesUtil.getDarkModePreference
+      (this.getUIContext().getHostContext() as common.UIAbilityContext);
     } catch (err) {
       console.error('Failed to initialize component:', err);
     }

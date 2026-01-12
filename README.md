@@ -4,23 +4,23 @@
 
 This is a basic quiz game that user can save the mode preferences(light mode/ dark mode) once and use it till change it again. 
 
-## Preview
+# Preview
 
 <div>
-    <img src="./screenshots/output.png" width="24%"/>
-    <img src="./screenshots/output2.png" width="24%"/>
-    <img src="./screenshots/output3.png" width="24%"/>
-    <img src="./screenshots/output4.png" width="24%"/>
+<img src="./screenshots/output.png" width="24%"/>
+<img src="./screenshots/output2.png" width="24%"/>
+<img src="./screenshots/output3.png" width="24%"/>
+<img src="./screenshots/output4.png" width="24%"/>
 </div>
 
-## Use Cases
+# Use Cases
 
 - User can select theme for the app.
 - User can select topic and start quiz.
 - User can learn success rate of the quiz and turn back to topics.
 - And even user close the app and reopen it, theme stays the same.
 
-## Tech Stack
+# Tech Stack
 
 - **Languages**: ArkTS, ArkUI
 - **Frameworks**: HarmonyOS SDK 5.1.0(18)
@@ -31,7 +31,7 @@ This is a basic quiz game that user can save the mode preferences(light mode/ da
     - `@kit.PerformanceAnalysisKit`
     - `@kit.CoreFileKit`
 
-## Directory Structure
+# Directory Structure
 ```
 entry/src/main/ets/        
 |---components      
@@ -60,5 +60,5 @@ entry/src/main/ets/
 
 # LICENSE
 
-Cycle Monitor is distributed under the terms of the MIT License.
+Quiz Game is distributed under the terms of the MIT License.
 See the [license](/LICENSE) for more information.

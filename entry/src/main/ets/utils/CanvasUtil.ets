@@ -80,14 +80,20 @@ export class CanvasUtil {
 
       if (distance <= slice.radius) {
         let angle = Math.atan2(dy, dx);
-        if (angle < 0) angle += 2 * Math.PI;
-        angle = (angle + Math.PI / 2) % (2 * Math.PI);
+        if (angle < 0) {
+          angle += 2 * Math.PI;
+          angle = (angle + Math.PI / 2) % (2 * Math.PI);
+        }
 
         let startAngle = (slice.startAngle + Math.PI / 2) % (2 * Math.PI);
         let endAngle = (slice.endAngle + Math.PI / 2) % (2 * Math.PI);
 
-        if (startAngle < 0) startAngle += 2 * Math.PI;
-        if (endAngle < 0) endAngle += 2 * Math.PI;
+        if (startAngle < 0) {
+          startAngle += 2 * Math.PI;
+        }
+        if (endAngle < 0) {
+          endAngle += 2 * Math.PI;
+        }
 
         if (startAngle <= endAngle) {
           if (angle >= startAngle && angle <= endAngle) {
