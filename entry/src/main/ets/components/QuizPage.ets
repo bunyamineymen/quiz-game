@@ -4,6 +4,8 @@ import { ThemeUtil } from '../utils/ThemeUtil';
 import { PreferencesUtil } from '../utils/PreferencesUtil';
 import { HapticUtil } from '../utils/HapticUtil';
 import { HistoryUtil } from '../utils/HistoryUtil';
+import { AudioUtil } from '../utils/AudioUtil';
+import { HealthUtil } from '../utils/HealthUtil';
 import { common } from '@kit.AbilityKit';
 
 @Component
@@ -26,6 +28,7 @@ export struct QuizPage {
   private timerId: number = -1;
   @State selectedOptionIndex: number = -1;
   @State showFeedback: boolean = false;
+  @State heartRate: number = 0;
 
   aboutToAppear() {
     this.initQuiz();
@@ -44,8 +47,9 @@ export struct QuizPage {
     }
   }
 
-  private startTimer() {
+  private async startTimer() {
     this.timeLeft = 15;
+    this.heartRate = await HealthUtil.getMockHeartRate();
     this.timerId = setInterval(() => {
       if (this.timeLeft > 0) {
         this.timeLeft--;
@@ -73,10 +77,13 @@ export struct QuizPage {
     this.showFeedback = true;
 
     if (answerIndex !== -1) {
+      const context = this.getUIContext().getHostContext() as common.UIAbilityContext;
       if (answerIndex === this.getCurrentQuestion()?.correctAnswer) {
         HapticUtil.playSuccess();
+        AudioUtil.playSound('success', context);
       } else {
         HapticUtil.playFailure();
+        AudioUtil.playSound('failure', context);
       }
     }
 
@@ -93,7 +100,7 @@ export struct QuizPage {
   }
 
   private async finishQuiz() {
-    this.quizResult = this.quizViewModel.calculateResult(this.topic, this.userAnswers, this.difficulty);
+    this.quizResult = await this.quizViewModel.calculateResult(this.topic, this.userAnswers, this.difficulty);
     console.info(this.quizResult.score.toString())
 
     const historyUtil = HistoryUtil.getInstance();
@@ -151,6 +158,13 @@ export struct QuizPage {
           Text(`${this.timeLeft}`)
             .fontSize(10)
             .fontColor(this.isDarkMode ? '#ffffff' : '#000000')
+
+          if (this.heartRate > 0) {
+            Text(`❤️${this.heartRate}`)
+              .fontSize(6)
+              .fontColor('#f44336')
+              .offset({ y: 15 })
+          }
         }
         .margin({ top: 15, bottom: 5 })
 

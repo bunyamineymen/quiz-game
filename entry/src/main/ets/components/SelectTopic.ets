@@ -19,6 +19,7 @@ export struct SelectTopic {
   @State selectedDifficulty: string = 'Easy';
   @State history: QuizHistoryItem[] = [];
   @State showHistory: boolean = false;
+  @State activeMode: boolean = false;
   private difficulties: string[] = ['Easy', 'Medium', 'Hard'];
 
   aboutToAppear() {
@@ -154,6 +155,14 @@ export struct SelectTopic {
           .borderRadius(25)
           .padding(8)
           .onClick(() => this.showHistory = true)
+
+        Button(this.activeMode ? '🏃' : '🧘')
+          .fontSize(16)
+          .backgroundColor(this.activeMode ? '#ff9800' : ThemeUtil.getButtonStyle(this.isDarkMode).backgroundColor)
+          .borderRadius(25)
+          .padding(8)
+          .margin({ top: 5 })
+          .onClick(() => this.activeMode = !this.activeMode)
 
         Button(ThemeUtil.getButtonText(this.isDarkMode))
           .fontSize(16)

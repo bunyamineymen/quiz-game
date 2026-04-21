@@ -4,15 +4,29 @@ import { common } from '@kit.AbilityKit';
 export class AudioUtil {
   private static avPlayer: media.AVPlayer | null = null;
 
-  static async init(context: common.UIAbilityContext) {
+  static async playSound(type: 'success' | 'failure', context: common.UIAbilityContext) {
     if (!AudioUtil.avPlayer) {
       AudioUtil.avPlayer = await media.createAVPlayer();
     }
+
+    // Reset player before next sound
+    await AudioUtil.avPlayer.reset();
+
+    // In a real app, we would load from rawfile:
+    // let fileDescriptor = await context.resourceManager.getRawFd('success.mp3');
+    // AudioUtil.avPlayer.fdSrc = fileDescriptor;
+
+    console.info('AudioUtil: Simulating sound playback for ' + type);
+
+    // Placeholder for actual playback logic once assets are available
+    // await AudioUtil.avPlayer.prepare();
+    // AudioUtil.avPlayer.play();
   }
 
-  static async playSound(type: 'success' | 'failure', context: common.UIAbilityContext) {
-    // In a real implementation, we would load actual mp3 files from rawfile
-    // For now, we simulate the logic
-    console.info('Playing sound: ' + type);
+  static async release() {
+    if (AudioUtil.avPlayer) {
+      await AudioUtil.avPlayer.release();
+      AudioUtil.avPlayer = null;
+    }
   }
 }
