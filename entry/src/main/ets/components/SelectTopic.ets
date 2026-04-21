@@ -1,6 +1,7 @@
 import { PreferencesUtil } from '../utils/PreferencesUtil';
 import { CanvasUtil, ClickableSlice } from '../utils/CanvasUtil';
 import { ThemeUtil } from '../utils/ThemeUtil';
+import { HistoryUtil, QuizHistoryItem } from '../utils/HistoryUtil';
 import { common } from '@kit.AbilityKit';
 
 @Component
@@ -9,12 +10,16 @@ export struct SelectTopic {
   private context: CanvasRenderingContext2D = new CanvasRenderingContext2D(this.settings);
   private preferencesUtil: PreferencesUtil = PreferencesUtil.getInstance();
   private clickableSlices: ClickableSlice[] = [];
-  private onStartQuiz?: (topic: string) => void;
+  private onStartQuiz?: (topic: string, difficulty: string) => void;
   private topics: string[] = [
     'History', 'Science', 'Geography', 'Sports', 'Art', 'Music'
   ];
 
   @State isDarkMode: boolean = false;
+  @State selectedDifficulty: string = 'Easy';
+  @State history: QuizHistoryItem[] = [];
+  @State showHistory: boolean = false;
+  private difficulties: string[] = ['Easy', 'Medium', 'Hard'];
 
   aboutToAppear() {
     this.initComponent();
@@ -25,6 +30,10 @@ export struct SelectTopic {
       await this.preferencesUtil.initPreferences(this.getUIContext().getHostContext() as common.UIAbilityContext);
       this.isDarkMode = this.preferencesUtil.getDarkModePreference
       (this.getUIContext().getHostContext() as common.UIAbilityContext);
+
+      const historyUtil = HistoryUtil.getInstance();
+      await historyUtil.init(this.getUIContext().getHostContext() as common.UIAbilityContext);
+      this.history = historyUtil.getHistory();
     } catch (err) {
       console.error('Failed to initialize component:', err);
     }
@@ -60,13 +69,52 @@ export struct SelectTopic {
     if (clickedTopic) {
       console.info('Selected topic:', clickedTopic);
       if (this.onStartQuiz) {
-        this.onStartQuiz(clickedTopic);
+        this.onStartQuiz(clickedTopic, this.selectedDifficulty);
       }
     }
   }
 
   build() {
     Stack({ alignContent: Alignment.TopEnd }) {
+      if (this.showHistory) {
+        Column() {
+          Text('Recent History')
+            .fontSize(16)
+            .fontWeight(FontWeight.Bold)
+            .fontColor(this.isDarkMode ? '#ffffff' : '#000000')
+            .margin({ top: 40, bottom: 10 })
+
+          List({ space: 5 }) {
+            ForEach(this.history, (item: QuizHistoryItem) => {
+              ListItem() {
+                Row() {
+                  Text(item.topic)
+                    .fontSize(10)
+                    .fontColor(this.isDarkMode ? '#ffffff' : '#000000')
+                  Blank()
+                  Text(`${item.score}/${item.total}`)
+                    .fontSize(10)
+                    .fontColor(this.isDarkMode ? '#cccccc' : '#666666')
+                }
+                .width('100%')
+                .padding(5)
+              }
+            }, (item: QuizHistoryItem) => item.date + item.topic)
+          }
+          .width('100%')
+          .height('60%')
+
+          Button('Back')
+            .fontSize(10)
+            .margin({ top: 10 })
+            .onClick(() => this.showHistory = false)
+        }
+        .width('100%')
+        .height('100%')
+        .backgroundColor(ThemeUtil.getBackgroundColor(this.isDarkMode))
+        .zIndex(10)
+      }
+
       Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
         Canvas(this.context)
           .width('90%')
@@ -82,17 +130,50 @@ export struct SelectTopic {
       .width('100%')
       .height('100%')
 
-      Button(ThemeUtil.getButtonText(this.isDarkMode))
-        .fontSize(16)
-        .fontWeight(FontWeight.Medium)
-        .backgroundColor(ThemeUtil.getButtonStyle(this.isDarkMode).backgroundColor)
-        .fontColor(ThemeUtil.getButtonStyle(this.isDarkMode).fontColor)
-        .borderRadius(25)
-        .padding({ left: 16, right: 16, top: 8, bottom: 8 })
-        .margin({ top: 20, right: 20 })
-        .onClick(() => {
-          this.toggleTheme();
-        })
+      Column() {
+        Row({ space: 10 }) {
+          ForEach(this.difficulties, (diff: string) => {
+            Text(diff[0])
+              .fontSize(10)
+              .width(20)
+              .height(20)
+              .textAlign(TextAlign.Center)
+              .borderRadius(10)
+              .backgroundColor(this.selectedDifficulty === diff ? '#4caf50' : (this.isDarkMode ? '#333333' : '#eeeeee'))
+              .fontColor(this.selectedDifficulty === diff ? '#ffffff' : (this.isDarkMode ? '#ffffff' : '#000000'))
+              .onClick(() => {
+                this.selectedDifficulty = diff;
+              })
+          }, (diff: string) => diff)
+        }
+        .margin({ top: 10 })
+
+        Button('📊')
+          .fontSize(16)
+          .backgroundColor(ThemeUtil.getButtonStyle(this.isDarkMode).backgroundColor)
+          .borderRadius(25)
+          .padding(8)
+          .onClick(() => this.showHistory = true)
+
+        Button(ThemeUtil.getButtonText(this.isDarkMode))
+          .fontSize(16)
+          .fontWeight(FontWeight.Medium)
+          .backgroundColor(ThemeUtil.getButtonStyle(this.isDarkMode).backgroundColor)
+          .fontColor(ThemeUtil.getButtonStyle(this.isDarkMode).fontColor)
+          .borderRadius(25)
+          .padding({ left: 16, right: 16, top: 8, bottom: 8 })
+          .margin({ top: 5 })
+          .onClick(() => {
+            this.toggleTheme();
+          })
+          .shadow({
+            radius: 8,
+            color: ThemeUtil.getButtonStyle(this.isDarkMode).shadowColor,
+            offsetX: 0,
+            offsetY: 2
+          })
+      }
+      .margin({ top: 10, right: 10 })
         .shadow({
           radius: 8,
           color: ThemeUtil.getButtonStyle(this.isDarkMode).shadowColor,
