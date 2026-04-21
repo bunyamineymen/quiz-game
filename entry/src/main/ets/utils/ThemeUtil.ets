@@ -4,6 +4,8 @@ export interface ButtonStyle {
   shadowColor: string;
 }
 export class ThemeUtil {
+  private constructor() {}
+
   static readonly DARK_COLORS = [
     '#8B0000',
     '#00008B',

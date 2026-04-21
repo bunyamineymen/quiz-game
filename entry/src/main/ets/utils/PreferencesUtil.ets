@@ -3,6 +3,9 @@ import { BusinessError } from '@kit.BasicServicesKit';
 import { common } from '@kit.AbilityKit';
 
 export class PreferencesUtil {
+  private constructor() {
+  }
+
   private static instance: PreferencesUtil | null = null;
   private dataPreferences: preferences.Preferences | null = null;
   private readonly PREFERENCES_NAME = 'userSettings';
