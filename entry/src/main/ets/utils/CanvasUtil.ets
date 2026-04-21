@@ -8,6 +8,8 @@ export interface ClickableSlice {
 }
 
 export class CanvasUtil {
+  private constructor() {}
+
   static drawPieChart(
     context: CanvasRenderingContext2D,
     topics: string[],

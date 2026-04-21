@@ -21,16 +21,20 @@ export class RdbUtil {
 
   async init(context: common.UIAbilityContext) {
     if (this.store) return;
-    this.store = await relationalStore.getRdbStore(context, this.STORE_CONFIG);
-    await this.store.executeSql(
+    try {
+      this.store = await relationalStore.getRdbStore(context, this.STORE_CONFIG);
+      await this.store.executeSql(
       'CREATE TABLE IF NOT EXISTS questions (' +
       'id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
       'question TEXT, ' +
       'options TEXT, ' +
       'correctAnswer INTEGER, ' +
       'topic TEXT, ' +
-      'difficulty TEXT)'
-    );
+        'difficulty TEXT)'
+      );
+    } catch (e) {
+      console.error('RdbUtil: Failed to initialize database', e);
+    }
   }
 
   async insertQuestions(questions: Question[]) {
@@ -55,14 +59,18 @@ export class RdbUtil {
     const resultSet = await this.store.query(predicates);
     const questions: Question[] = [];
     while (resultSet.goToNextRow()) {
-      questions.push({
-        id: resultSet.getLong(resultSet.getColumnIndex('id')),
-        question: resultSet.getString(resultSet.getColumnIndex('question')),
-        options: JSON.parse(resultSet.getString(resultSet.getColumnIndex('options'))),
-        correctAnswer: resultSet.getLong(resultSet.getColumnIndex('correctAnswer')),
-        topic: resultSet.getString(resultSet.getColumnIndex('topic')),
-        difficulty: resultSet.getString(resultSet.getColumnIndex('difficulty')) as Difficulty
-      });
+      try {
+        questions.push({
+          id: resultSet.getLong(resultSet.getColumnIndex('id')),
+          question: resultSet.getString(resultSet.getColumnIndex('question')),
+          options: JSON.parse(resultSet.getString(resultSet.getColumnIndex('options'))) as string[],
+          correctAnswer: resultSet.getLong(resultSet.getColumnIndex('correctAnswer')),
+          topic: resultSet.getString(resultSet.getColumnIndex('topic')),
+          difficulty: resultSet.getString(resultSet.getColumnIndex('difficulty')) as Difficulty
+        });
+      } catch (e) {
+        console.error('RdbUtil: Failed to parse question options', e);
+      }
     }
     resultSet.close();
     return questions;

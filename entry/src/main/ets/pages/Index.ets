@@ -29,8 +29,11 @@ struct Index {
     console.info('Returning to topics selection');
   }
 
-  private showResult = (score:number) => {
+  @State totalQuestions: number = 0;
+
+  private showResult = (score: number, total: number) => {
     this.resultScore = score;
+    this.totalQuestions = total;
     this.currentPage = 'result';
   }
 
@@ -67,7 +70,8 @@ struct Index {
         })
       } else if (this.currentPage === 'result') {
         QuizResultPage({
-          quizResult: this.resultScore,
+          quizScore: this.resultScore,
+          totalQuestions: this.totalQuestions,
           onQuizFinish: this.backToTopics
         })
       }

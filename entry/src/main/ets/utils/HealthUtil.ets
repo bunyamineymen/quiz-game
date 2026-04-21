@@ -2,6 +2,8 @@ import { sensor } from '@kit.SensorServiceKit';
 import { BusinessError } from '@kit.BasicServicesKit';
 
 export class HealthUtil {
+  private constructor() {}
+
   // Simulating HealthKit's step count or heart rate requirement
   static async checkActivityGoal(): Promise<boolean> {
     console.info('HealthUtil: Checking activity goals...');

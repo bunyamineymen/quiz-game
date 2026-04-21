@@ -76,7 +76,7 @@ export struct SelectTopic {
   }
 
   build() {
-    Stack({ alignContent: Alignment.TopEnd }) {
+    Stack({ alignContent: Alignment.Center }) {
       if (this.showHistory) {
         Column() {
           Text('Recent History')
@@ -90,15 +90,15 @@ export struct SelectTopic {
               ListItem() {
                 Row() {
                   Text(item.topic)
-                    .fontSize(10)
+                    .fontSize(12)
                     .fontColor(this.isDarkMode ? '#ffffff' : '#000000')
                   Blank()
                   Text(`${item.score}/${item.total}`)
-                    .fontSize(10)
+                    .fontSize(12)
                     .fontColor(this.isDarkMode ? '#cccccc' : '#666666')
                 }
                 .width('100%')
-                .padding(5)
+                .padding({ left: 15, right: 15, top: 10, bottom: 10 })
               }
             }, (item: QuizHistoryItem) => item.date + item.topic)
           }
@@ -135,11 +135,11 @@ export struct SelectTopic {
         Row({ space: 10 }) {
           ForEach(this.difficulties, (diff: string) => {
             Text(diff[0])
-              .fontSize(10)
-              .width(20)
-              .height(20)
+              .fontSize(14)
+              .width(28)
+              .height(28)
               .textAlign(TextAlign.Center)
-              .borderRadius(10)
+              .borderRadius(14)
               .backgroundColor(this.selectedDifficulty === diff ? '#4caf50' : (this.isDarkMode ? '#333333' : '#eeeeee'))
               .fontColor(this.selectedDifficulty === diff ? '#ffffff' : (this.isDarkMode ? '#ffffff' : '#000000'))
               .onClick(() => {
@@ -182,13 +182,9 @@ export struct SelectTopic {
             offsetY: 2
           })
       }
-      .margin({ top: 10, right: 10 })
-        .shadow({
-          radius: 8,
-          color: ThemeUtil.getButtonStyle(this.isDarkMode).shadowColor,
-          offsetX: 0,
-          offsetY: 2
-        })
+      .width('100%')
+      .padding({ top: 40, bottom: 40 })
+      .hitTestBehavior(HitTestMode.Transparent)
     }
     .width('100%')
     .height('100%')

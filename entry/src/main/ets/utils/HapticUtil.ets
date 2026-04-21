@@ -2,6 +2,8 @@ import { vibrator } from '@kit.SensorServiceKit';
 import { BusinessError } from '@kit.BasicServicesKit';
 
 export class HapticUtil {
+  private constructor() {}
+
   static playSuccess() {
     try {
       vibrator.startVibration({

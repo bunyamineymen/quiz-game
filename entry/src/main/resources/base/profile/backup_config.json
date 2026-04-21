@@ -1,3 +1,4 @@
 {
-  "allowToBackupRestore": true
+  "allowBackup": false,
+  "host": "com.hmosdemos.wearable.quiz_game"
 }

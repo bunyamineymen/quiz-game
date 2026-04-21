@@ -13,7 +13,7 @@ export struct QuizPage {
   private quizViewModel: QuizViewModel = QuizViewModel.getInstance();
   private preferencesUtil: PreferencesUtil = PreferencesUtil.getInstance();
   private onBackToTopics?: () => void;
-  private onShowResult?: (score: number) => void;
+  private onShowResult?: (score: number, total: number) => void;
 
   @Prop topic: string = '';
   @Prop difficulty: string = 'Easy';
@@ -114,7 +114,7 @@ export struct QuizPage {
 
     this.isQuizCompleted = true;
     if (this.onShowResult) {
-      this.onShowResult(this.quizResult.score);
+      this.onShowResult(this.quizResult.score, this.quizResult.totalQuestions);
     }
   }
 
@@ -156,7 +156,7 @@ export struct QuizPage {
             .backgroundColor(this.isDarkMode ? '#333333' : '#eeeeee')
 
           Text(`${this.timeLeft}`)
-            .fontSize(10)
+            .fontSize(14)
             .fontColor(this.isDarkMode ? '#ffffff' : '#000000')
 
           if (this.heartRate > 0) {
@@ -169,28 +169,29 @@ export struct QuizPage {
         .margin({ top: 15, bottom: 5 })
 
         Text(`${this.currentQuestionIndex + 1}/${this.questions.length}`)
-          .fontSize(8)
+          .fontSize(10)
           .fontColor(this.isDarkMode ? '#cccccc' : '#666666')
           .margin({ bottom: 10 })
           .alignSelf(ItemAlign.Center)
 
         if (this.getCurrentQuestion()) {
-          Column() {
-            Text(this.getCurrentQuestion()!.question)
-              .fontSize(12)
-              .fontWeight(FontWeight.Medium)
-              .fontColor(this.isDarkMode ? '#ffffff' : '#000000')
-              .textAlign(TextAlign.Center)
-              .margin({ bottom: 12 })
-              .padding({ left: 20, right: 20 })
+          Scroll() {
+            Column() {
+              Text(this.getCurrentQuestion()!.question)
+                .fontSize(14)
+                .fontWeight(FontWeight.Medium)
+                .fontColor(this.isDarkMode ? '#ffffff' : '#000000')
+                .textAlign(TextAlign.Center)
+                .margin({ bottom: 12 })
+                .padding({ left: 15, right: 15 })
 
-            Column({ space: 8 }) {
-              ForEach(this.getCurrentQuestion()!.options, (option: string, index: number) => {
-                Button(option)
-                  .width('90%')
-                  .height(30)
-                  .fontSize(8)
-                  .fontColor(this.isDarkMode ? '#ffffff' : '#000000')
+              Column({ space: 8 }) {
+                ForEach(this.getCurrentQuestion()!.options, (option: string, index: number) => {
+                  Button(option)
+                    .width('90%')
+                    .height(36)
+                    .fontSize(12)
+                    .fontColor(this.isDarkMode ? '#ffffff' : '#000000')
                   .backgroundColor(this.getOptionBackgroundColor(index))
                   .borderRadius(16)
                   .border({
@@ -201,13 +202,17 @@ export struct QuizPage {
                   .onClick(() => {
                     this.selectAnswer(index);
                   })
-              },(option: string) => option)
+                }, (option: string) => option)
+              }
+              .width('100%')
+              .alignItems(HorizontalAlign.Center)
             }
             .width('100%')
-            .alignItems(HorizontalAlign.Center)
+            .padding({ bottom: 20 })
           }
+          .width('100%')
           .layoutWeight(1)
-          .justifyContent(FlexAlign.Center)
+          .scrollBar(BarState.Off)
         }
     }
     .width('100%')

@@ -40,6 +40,11 @@ export class HistoryUtil {
   getHistory(): QuizHistoryItem[] {
     if (!this.dataPreferences) return [];
     const val = this.dataPreferences.getSync(this.HISTORY_KEY, '[]') as string;
-    return JSON.parse(val);
+    try {
+      return JSON.parse(val) as QuizHistoryItem[];
+    } catch (e) {
+      console.error('HistoryUtil: Failed to parse history', e);
+      return [];
+    }
   }
 }
